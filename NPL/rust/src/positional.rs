@@ -36,15 +36,11 @@ pub fn positional_encoding(position: usize, d_model: usize, device: &Device) -> 
 
     // Apply sin to even indices, cos to odd indices.
     for pos in 0..position {
-        let mut i = 0_usize;
-        while i < d_model {
-            data[pos * d_model + i] = data[pos * d_model + i].sin();
-            i += 2;
+        for even_i in (0..d_model).step_by(2) {
+            data[pos * d_model + even_i] = data[pos * d_model + even_i].sin();
         }
-        let mut i = 1_usize;
-        while i < d_model {
-            data[pos * d_model + i] = data[pos * d_model + i].cos();
-            i += 2;
+        for odd_i in (1..d_model).step_by(2) {
+            data[pos * d_model + odd_i] = data[pos * d_model + odd_i].cos();
         }
     }
 
